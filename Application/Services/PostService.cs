@@ -19,18 +19,6 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public PostDto AddNewPost(CreatePostDto newPost)
-        {
-            if(string.IsNullOrEmpty(newPost.Title))
-            {
-                throw new Exception("Title can not be empty.");
-            }
-
-            var post = _mapper.Map<Post>(newPost);
-            _postRepository.Add(post);
-            return _mapper.Map<PostDto>(post);
-        }
-
         public IEnumerable<PostDto> GetAllPost()
         {
             var posts = _postRepository.GetAll();
@@ -43,11 +31,29 @@ namespace Application.Services
             return _mapper.Map<PostDto>(post);
         }
 
+        public PostDto AddNewPost(CreatePostDto newPost)
+        {
+            if(string.IsNullOrEmpty(newPost.Title))
+            {
+                throw new Exception("Title can not be empty.");
+            }
+
+            var post = _mapper.Map<Post>(newPost);
+            _postRepository.Add(post);
+            return _mapper.Map<PostDto>(post);
+        }
+
         public void UpdatePost(UpdatePostDto updatePost)
         {
             var existingPost = _postRepository.GetById(updatePost.Id);
             var post = _mapper.Map(updatePost, existingPost);
             _postRepository.Update(post);
+        }
+
+        public void DeletePost(int id)
+        {
+            var post = _postRepository.GetById(id);
+            _postRepository.Delete(post);
         }
     }
 }

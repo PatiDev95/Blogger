@@ -51,6 +51,13 @@ namespace WebAPI.Controllers
             _postService.UpdatePost(updatePost);
             return NoContent();
         }
-        
+
+        [SwaggerOperation(Summary = "Delete existing post.")]
+        [HttpDelete]
+        public IActionResult Delete(int id)
+        {
+            _postService.DeletePost(id);
+            return NoContent();
+        }
     }
 }
