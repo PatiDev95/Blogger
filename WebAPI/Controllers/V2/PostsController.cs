@@ -2,10 +2,13 @@
 using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Linq;
 
-namespace WebAPI.Controllers
+namespace WebAPI.Controllers.V2
 {
-    [Route("api/[controller]")]
+    [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiVersion("2.0")]
+    [Route("api/{v:apiVersion}/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
@@ -21,7 +24,7 @@ namespace WebAPI.Controllers
         public IActionResult GetAll()
         {
             var posts = _postService.GetAllPost();
-            return Ok(posts);
+            return Ok(new { Post = posts, Count = posts.Count() });
         }
 
         [SwaggerOperation(Summary = "Return a post with the specified id.")]
@@ -29,7 +32,7 @@ namespace WebAPI.Controllers
         public IActionResult Get(int id)
         {
             var post = _postService.GetPostById(id);
-            if(post != null)
+            if (post != null)
             {
                 return Ok(post);
             }
@@ -44,7 +47,7 @@ namespace WebAPI.Controllers
             return Created($"api/posts/{post.Id}", post);
         }
 
-        [SwaggerOperation (Summary = "Update existing post.")]
+        [SwaggerOperation(Summary = "Update existing post.")]
         [HttpPut]
         public IActionResult Put(UpdatePostDto updatePost)
         {
