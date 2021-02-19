@@ -3,16 +3,17 @@ using Domain.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repository
 {
     public class PostRepository : IPostRepository
     {
-        public static readonly ISet<Post> _posts = new HashSet<Post> 
+        public static  ISet<Post> _posts = new HashSet<Post> 
         { 
-            new Post(1, "Title1", "Content1"),
-            new Post(2, "Title2", "Content2"),
-            new Post(3, "Title3", "Content3")
+            new Post(1, "Jak zostać programistą", "..."),
+            new Post(2, "Ile zarabia programista", "..."),
+            new Post(3, "Dlaczego warto zostać programistą", "...")
         };
 
         public IEnumerable<Post> GetAll()
@@ -41,6 +42,7 @@ namespace Infrastructure.Repository
         public void Delete(Post post)
         {
             _posts.Remove(post);
-        } 
+        }
+
     }
 }

@@ -5,6 +5,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace WebAPI.Controllers.V1
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]

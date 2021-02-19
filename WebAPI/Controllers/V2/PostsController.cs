@@ -3,10 +3,11 @@ using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace WebAPI.Controllers.V2
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
@@ -37,6 +38,15 @@ namespace WebAPI.Controllers.V2
                 return Ok(post);
             }
             return NotFound();
+        }
+
+        [SwaggerOperation(Summary = "Search post by title.")]
+        [HttpGet]
+        [Route("Search/{title}")]
+        public IActionResult Search(string title)
+        {
+            var posts = _postService.Search(title);
+            return Ok(posts);
         }
 
         [SwaggerOperation(Summary = "Create new post.")]

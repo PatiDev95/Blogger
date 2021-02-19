@@ -5,6 +5,7 @@ using Domain.Entity;
 using Domain.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Application.Services
 {
@@ -31,9 +32,23 @@ namespace Application.Services
             return _mapper.Map<PostDto>(post);
         }
 
+        public IEnumerable<PostDto> Search(string title)
+        {
+            var posts = _postRepository.GetAll();
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                return _mapper.Map<IEnumerable<PostDto>>(posts);
+            }
+
+            var filterPost = posts.Where(x => x.Title.ToUpper().Contains(title.ToUpper()));
+
+            return _mapper.Map<IEnumerable<PostDto>>(filterPost);
+        }
+
         public PostDto AddNewPost(CreatePostDto newPost)
         {
-            if(string.IsNullOrEmpty(newPost.Title))
+            if (string.IsNullOrEmpty(newPost.Title))
             {
                 throw new Exception("Title can not be empty.");
             }
