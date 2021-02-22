@@ -3,7 +3,6 @@ using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 namespace WebAPI.Controllers.V2
 {
