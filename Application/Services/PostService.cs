@@ -6,6 +6,7 @@ using Domain.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -20,21 +21,21 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public IEnumerable<PostDto> GetAllPost()
+        public async Task<IEnumerable<PostDto>> GetAllPostAsync()
         {
-            var posts = _postRepository.GetAll();
+            var posts = await _postRepository.GetAllAsync();
             return _mapper.Map<IEnumerable<PostDto>>(posts);
         }
 
-        public PostDto GetPostById(int id)
+        public async Task<PostDto> GetPostByIdAsync(int id)
         {
-            var post = _postRepository.GetById(id);
+            var post = await _postRepository.GetByIdAsync(id);
             return _mapper.Map<PostDto>(post);
         }
 
-        public IEnumerable<PostDto> Search(string title)
+        public async Task<IEnumerable<PostDto>> SearchAsync(string title)
         {
-            var posts = _postRepository.GetAll();
+            var posts = await _postRepository.GetAllAsync();
 
             if (string.IsNullOrWhiteSpace(title))
             {
@@ -46,7 +47,7 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<PostDto>>(filterPost);
         }
 
-        public PostDto AddNewPost(CreatePostDto newPost)
+        public async Task<PostDto> AddNewPostAsync(CreatePostDto newPost)
         {
             if (string.IsNullOrEmpty(newPost.Title))
             {
@@ -54,21 +55,21 @@ namespace Application.Services
             }
 
             var post = _mapper.Map<Post>(newPost);
-            _postRepository.Add(post);
-            return _mapper.Map<PostDto>(post);
+            var result = await _postRepository.AddAsync(post);
+            return _mapper.Map<PostDto>(result);
         }
 
-        public void UpdatePost(UpdatePostDto updatePost)
+        public async Task UpdatePostAsync(UpdatePostDto updatePost)
         {
-            var existingPost = _postRepository.GetById(updatePost.Id);
+            var existingPost = await _postRepository.GetByIdAsync(updatePost.Id);
             var post = _mapper.Map(updatePost, existingPost);
-            _postRepository.Update(post);
+            await _postRepository.UpdateAsync(post);
         }
 
-        public void DeletePost(int id)
+        public async Task DeletePostAsync(int id)
         {
-            var post = _postRepository.GetById(id);
-            _postRepository.Delete(post);
+            var post = await _postRepository.GetByIdAsync(id);
+            await _postRepository.DeleteAsync(post);
         }
     }
 }
