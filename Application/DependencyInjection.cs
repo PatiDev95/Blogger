@@ -11,6 +11,7 @@ namespace Application
         {
             services.AddScoped<IPostService, PostService>();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddScoped<ICosmosPostService, CosmosPostService>();
             return services;
         }
     }
