@@ -53,7 +53,7 @@ namespace WebAPI.Controllers.V2
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
 
             var posts = await _postService.SearchAsync(title, validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
-            return Ok(posts);
+            return Ok(new Response<IEnumerable<PostDto>>(posts));
         }
 
         [SwaggerOperation(Summary = "Create new post.")]
