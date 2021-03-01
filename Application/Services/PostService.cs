@@ -21,9 +21,9 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PostDto>> GetAllPostAsync()
+        public async Task<IEnumerable<PostDto>> GetAllPostAsync(int pageNumber, int pageSize)
         {
-            var posts = await _postRepository.GetAllAsync();
+            var posts = await _postRepository.GetAllAsync(pageNumber, pageSize);
             return _mapper.Map<IEnumerable<PostDto>>(posts);
         }
 
@@ -33,9 +33,9 @@ namespace Application.Services
             return _mapper.Map<PostDto>(post);
         }
 
-        public async Task<IEnumerable<PostDto>> SearchAsync(string title)
+        public async Task<IEnumerable<PostDto>> SearchAsync(string title, int pageNumber, int pageSize)
         {
-            var posts = await _postRepository.GetAllAsync();
+            var posts = await _postRepository.GetAllAsync(pageNumber, pageSize);
 
             if (string.IsNullOrWhiteSpace(title))
             {

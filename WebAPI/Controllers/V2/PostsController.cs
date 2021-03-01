@@ -2,12 +2,15 @@
 using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.Filter;
+using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V2
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
+    
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
@@ -22,10 +25,12 @@ namespace WebAPI.Controllers.V2
 
         [SwaggerOperation(Summary = "Returns all posts.")]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter)
         {
-            var posts = await _postService.GetAllPostAsync();
-            return Ok(new { Post = posts, Count = posts.Count() });
+            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
+            var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+            return Ok(new Response<IEnumerable<PostDto>>(posts));
         }
 
         [SwaggerOperation(Summary = "Return a post with the specified id.")]
@@ -43,9 +48,11 @@ namespace WebAPI.Controllers.V2
         [SwaggerOperation(Summary = "Search post by title.")]
         [HttpGet]
         [Route("Search/{title}")]
-        public async Task<IActionResult> Search(string title)
+        public async Task<IActionResult> Search([FromQuery] PaginationFilter paginationFilter, string title)
         {
-            var posts = await _postService.SearchAsync(title);
+            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+
+            var posts = await _postService.SearchAsync(title, validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
             return Ok(posts);
         }
 

@@ -18,9 +18,9 @@ namespace Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<Post>> GetAllAsync()
+        public async Task<IEnumerable<Post>> GetAllAsync(int pageNumber, int pageSize)
         {
-            return await _context.Posts.ToListAsync(); 
+            return await _context.Posts.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
         public async Task<Post> GetByIdAsync(int id)
@@ -30,7 +30,7 @@ namespace Infrastructure.Repository
 
         public async Task<Post> AddAsync(Post post)
         {
-            
+
             var creadtedPost = await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
             return creadtedPost.Entity;
@@ -38,7 +38,7 @@ namespace Infrastructure.Repository
 
         public async Task UpdateAsync(Post post)
         {
-           
+
             _context.Posts.Update(post);
             await _context.SaveChangesAsync();
             await Task.CompletedTask;

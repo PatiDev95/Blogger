@@ -6,9 +6,9 @@ namespace Application.Interface
 {
     public interface IPostService
     {
-        Task<IEnumerable<PostDto>> GetAllPostAsync();
+        Task<IEnumerable<PostDto>> GetAllPostAsync(int pageNumber, int pageSize);
         Task<PostDto> GetPostByIdAsync(int id);
-        Task<IEnumerable<PostDto>> SearchAsync(string title);
+        Task<IEnumerable<PostDto>> SearchAsync(string title, int pageNumber, int pageSize);
         Task<PostDto> AddNewPostAsync(CreatePostDto newPost);
         Task UpdatePostAsync(UpdatePostDto updatePost);
         Task DeletePostAsync(int id);
