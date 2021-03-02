@@ -2,10 +2,9 @@
 using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using WebAPI.Filters;
-using WebAPI.Wrappers;
+using WebAPI.Helpers;
 
 namespace WebAPI.Controllers.V1
 {
@@ -29,7 +28,8 @@ namespace WebAPI.Controllers.V1
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize); 
 
             var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
-            return Ok(new Response<IEnumerable<PostDto>>(posts));
+            var totalRecords = await _postService.GetAllPostsCountAsync();
+            return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
         }
 
         [SwaggerOperation(Summary = "Return a post with the specified id.")]
