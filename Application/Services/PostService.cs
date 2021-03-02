@@ -27,6 +27,11 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<PostDto>>(posts);
         }
 
+        public async Task<int> GetAllPostsCountAsync()
+        {
+            return await _postRepository.GetAllCountAsync();
+        }
+
         public async Task<PostDto> GetPostByIdAsync(int id)
         {
             var post = await _postRepository.GetByIdAsync(id);

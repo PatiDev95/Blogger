@@ -23,6 +23,11 @@ namespace Infrastructure.Repository
             return await _context.Posts.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
         }
 
+        public async Task<int> GetAllCountAsync()
+        {
+            return await _context.Posts.CountAsync();
+        }
+
         public async Task<Post> GetByIdAsync(int id)
         {
             return await _context.Posts.SingleOrDefaultAsync(x => x.Id == id);

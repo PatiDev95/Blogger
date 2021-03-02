@@ -3,14 +3,14 @@ using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using WebAPI.Filter;
+using WebAPI.Filters;
+using WebAPI.Helpers;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V2
 {
-    
+
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
@@ -30,7 +30,9 @@ namespace WebAPI.Controllers.V2
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
 
             var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
-            return Ok(new Response<IEnumerable<PostDto>>(posts));
+            var totalRecords = await _postService.GetAllPostsCountAsync();
+
+            return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
         }
 
         [SwaggerOperation(Summary = "Return a post with the specified id.")]
@@ -53,6 +55,7 @@ namespace WebAPI.Controllers.V2
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
 
             var posts = await _postService.SearchAsync(title, validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+
             return Ok(new Response<IEnumerable<PostDto>>(posts));
         }
 

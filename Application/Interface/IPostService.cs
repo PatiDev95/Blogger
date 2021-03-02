@@ -7,6 +7,7 @@ namespace Application.Interface
     public interface IPostService
     {
         Task<IEnumerable<PostDto>> GetAllPostAsync(int pageNumber, int pageSize);
+        Task<int> GetAllPostsCountAsync();
         Task<PostDto> GetPostByIdAsync(int id);
         Task<IEnumerable<PostDto>> SearchAsync(string title, int pageNumber, int pageSize);
         Task<PostDto> AddNewPostAsync(CreatePostDto newPost);

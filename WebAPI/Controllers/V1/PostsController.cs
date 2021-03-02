@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebAPI.Filter;
+using WebAPI.Filters;
 using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V1
