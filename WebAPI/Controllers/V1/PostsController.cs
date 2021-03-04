@@ -2,6 +2,7 @@
 using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Filters;
 using WebAPI.Helpers;
@@ -23,11 +24,12 @@ namespace WebAPI.Controllers.V1
 
         [SwaggerOperation(Summary = "Returns all posts.")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter)
         {
-            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize); 
+            var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+            var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-            var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+            var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize, validSortingFilter.SortField, validSortingFilter.Ascending);
             var totalRecords = await _postService.GetAllPostsCountAsync();
             return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
         }

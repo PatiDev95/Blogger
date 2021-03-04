@@ -3,6 +3,7 @@ using Application.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Filters;
 using WebAPI.Helpers;
@@ -23,13 +24,21 @@ namespace WebAPI.Controllers.V2
             _postService = postService;
         }
 
+        [SwaggerOperation(Summary = "Retrives sort fields.")]
+        [HttpGet("[action]")]
+        public IActionResult GetSortFields()
+        {
+            return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
+        }
+
         [SwaggerOperation(Summary = "Returns all posts.")]
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter)
         {
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+            var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-            var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+            var posts = await _postService.GetAllPostAsync(validPaginationFilter.PageNumber, validPaginationFilter.PageSize, validSortingFilter.SortField, validSortingFilter.Ascending);
             var totalRecords = await _postService.GetAllPostsCountAsync();
 
             return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
@@ -50,11 +59,12 @@ namespace WebAPI.Controllers.V2
         [SwaggerOperation(Summary = "Search post by title.")]
         [HttpGet]
         [Route("Search/{title}")]
-        public async Task<IActionResult> Search([FromQuery] PaginationFilter paginationFilter, string title)
+        public async Task<IActionResult> Search([FromQuery] PaginationFilter paginationFilter, string title, [FromQuery] SortingFilter sortingFilter)
         {
             var validPaginationFilter = new PaginationFilter(paginationFilter.PageNumber, paginationFilter.PageSize);
+            var validSortingFilter = new SortingFilter(sortingFilter.SortField, sortingFilter.Ascending);
 
-            var posts = await _postService.SearchAsync(title, validPaginationFilter.PageNumber, validPaginationFilter.PageSize);
+            var posts = await _postService.SearchAsync(title, validPaginationFilter.PageNumber, validPaginationFilter.PageSize, validSortingFilter.SortField, validSortingFilter.Ascending);
 
             return Ok(new Response<IEnumerable<PostDto>>(posts));
         }
