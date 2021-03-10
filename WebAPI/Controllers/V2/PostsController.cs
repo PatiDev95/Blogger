@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interface;
+using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
@@ -32,6 +33,14 @@ namespace WebAPI.Controllers.V2
         }
 
         [SwaggerOperation(Summary = "Returns all posts.")]
+        [EnableQuery]
+        [HttpGet("[action]")]
+        public IQueryable<PostDto> GetAll()
+        {
+            return _postService.GetAllPosts();
+        }
+
+        [SwaggerOperation(Summary = "Returns paged posts.")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
         {

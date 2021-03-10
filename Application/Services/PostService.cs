@@ -21,6 +21,13 @@ namespace Application.Services
             _mapper = mapper;
         }
 
+
+        public IQueryable<PostDto> GetAllPosts()
+        {
+            var posts = _postRepository.GetAll();
+            return _mapper.ProjectTo<PostDto>(posts);
+        }
+
         public async Task<IEnumerable<PostDto>> GetAllPostAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy)
         {
             var posts = await _postRepository.GetAllAsync(pageNumber, pageSize, sortField, ascending, filterBy);
@@ -76,5 +83,6 @@ namespace Application.Services
             var post = await _postRepository.GetByIdAsync(id);
             await _postRepository.DeleteAsync(post);
         }
+
     }
 }

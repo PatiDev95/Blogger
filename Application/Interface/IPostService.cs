@@ -1,11 +1,14 @@
 ﻿using Application.Dto;
+using Domain.Entity;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Application.Interface
 {
     public interface IPostService
     {
+        IQueryable<PostDto> GetAllPosts();
         Task<IEnumerable<PostDto>> GetAllPostAsync(int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
         Task<int> GetAllPostsCountAsync(string filterBy);
         Task<PostDto> GetPostByIdAsync(int id);
