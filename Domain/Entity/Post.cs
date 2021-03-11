@@ -1,4 +1,5 @@
 ﻿using Domain.Common;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,10 +17,14 @@ namespace Domain.Entity
         [MaxLength(100)]
         public string Content { get; set; }
 
-        public Post() { }
+        public Post() 
+        {
+            CreatedAt = DateTime.UtcNow;
+        }
 
         public Post(int id, string title, string content)
         {
+
             Id = id;
             Title = title;
             Content = content;

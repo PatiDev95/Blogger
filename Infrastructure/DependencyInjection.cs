@@ -9,6 +9,7 @@ namespace Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
             services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IDapperPostRepository, DapperPostRepository>();
             services.AddScoped<ICosmosPostRepository, CosmosPostRepository>();
             return services;
         }

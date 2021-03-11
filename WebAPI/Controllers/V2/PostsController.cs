@@ -12,7 +12,7 @@ using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V2
 {
-    [ApiExplorerSettings(IgnoreApi = false)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
