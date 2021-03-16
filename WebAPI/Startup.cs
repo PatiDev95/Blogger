@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OData.Edm;
-using WebAPI.Instalers;
+using WebAPI.Installers;
 
 namespace WebAPI
 {

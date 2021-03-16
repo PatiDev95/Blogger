@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 
-namespace WebAPI.Instalers
+namespace WebAPI.Installers
 {
     public class DapperInstaller : IInstaller
     {

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using OData.Swagger.Services;
 
-namespace WebAPI.Instalers
+namespace WebAPI.Installers
 {
     public class SwaggerInstaler : IInstaller
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace WebAPI.Instalers
+namespace WebAPI.Installers
 {
     public class MvcInstaler : IInstaller
     {
