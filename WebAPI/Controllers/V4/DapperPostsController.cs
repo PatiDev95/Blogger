@@ -4,7 +4,7 @@ using WebAPI.Controllers.V2;
 
 namespace WebAPI.Controllers.V4
 {
-    [ApiExplorerSettings(IgnoreApi = false)]
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ApiVersion("4.0")]
     [Route("v4/api/[controller]")]
     [ApiController]

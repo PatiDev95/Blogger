@@ -21,6 +21,8 @@ namespace WebAPI.Installers
                     options.JsonSerializerOptions.WriteIndented = true; 
                 });
 
+            services.AddAuthorization();
+
             services.AddApiVersioning(x =>
             {
                 x.DefaultApiVersion = new ApiVersion(2, 0);

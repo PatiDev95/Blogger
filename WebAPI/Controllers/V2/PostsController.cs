@@ -1,6 +1,7 @@
 ﻿using Application.Dto;
 using Application.Interface;
 using Microsoft.AspNet.OData;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V2
 {
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [Authorize]
+    [ApiExplorerSettings(IgnoreApi = false)]
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
     [ApiController]
