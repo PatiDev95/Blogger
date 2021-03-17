@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interface;
+using Infrastructure.Identity;
 using Microsoft.AspNet.OData;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -37,6 +38,7 @@ namespace WebAPI.Controllers.V2
 
         [SwaggerOperation(Summary = "Returns all posts.")]
         [EnableQuery]
+        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet("[action]")]
         public IQueryable<PostDto> GetAll()
         {
@@ -83,6 +85,7 @@ namespace WebAPI.Controllers.V2
             return Ok(new Response<IEnumerable<PostDto>>(posts));
         }
 
+        [Authorize(Roles = UserRoles.User)]
         [SwaggerOperation(Summary = "Create new post.")]
         [HttpPost]
         public async Task<IActionResult> Post(CreatePostDto newPost)
@@ -91,11 +94,14 @@ namespace WebAPI.Controllers.V2
             return Created($"api/posts/{post.Id}", post);
         }
 
+        [Authorize(Roles = UserRoles.User)]
         [SwaggerOperation(Summary = "Update existing post.")]
         [HttpPut]
         public async Task<IActionResult> Put(UpdatePostDto updatePost)
         {
             var userOwnPosts = await _postService.UserOwnsPostAsync(updatePost.Id, User.FindFirstValue(ClaimTypes.NameIdentifier));
+           
+            
             if(!userOwnPosts)
             {
                 return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post." });
@@ -105,12 +111,16 @@ namespace WebAPI.Controllers.V2
             return NoContent();
         }
 
+        [Authorize(Roles = UserRoles.AdminorUser)]
         [SwaggerOperation(Summary = "Delete existing post.")]
         [HttpDelete]
         public async  Task<IActionResult> Delete(int id)
         {
             var userOwnPosts = await _postService.UserOwnsPostAsync(id, User.FindFirstValue(ClaimTypes.NameIdentifier));
-            if (!userOwnPosts)
+            var isAdmin = User.FindFirstValue(ClaimTypes.Role).Contains(UserRoles.Admin);
+            
+            
+            if (!isAdmin && !userOwnPosts)
             {
                 return BadRequest(new Response<bool>() { Succeeded = false, Message = "You do not own this post." });
             }
