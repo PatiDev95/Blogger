@@ -13,8 +13,9 @@ namespace Application.Interface
         Task<int> GetAllPostsCountAsync(string filterBy);
         Task<PostDto> GetPostByIdAsync(int id);
         Task<IEnumerable<PostDto>> SearchAsync(string title, int pageNumber, int pageSize, string sortField, bool ascending, string filterBy);
-        Task<PostDto> AddNewPostAsync(CreatePostDto newPost);
+        Task<PostDto> AddNewPostAsync(CreatePostDto newPost, string userId);
         Task UpdatePostAsync(UpdatePostDto updatePost);
         Task DeletePostAsync(int id);
+        Task<bool> UserOwnsPostAsync(int postId, string userId);
     }
 }

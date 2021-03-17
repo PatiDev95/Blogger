@@ -1,4 +1,5 @@
-﻿using Domain.Common;
+﻿using Application.Services;
+using Domain.Common;
 using Domain.Entity;
 using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -11,12 +12,15 @@ namespace Infrastructure.Data
 {
     public class BloggerContext : IdentityDbContext<ApplicationUser>
     {
-        public BloggerContext (DbContextOptions<BloggerContext> options) : base(options)
+        private readonly UserResolverService _userService;
+
+        public BloggerContext(DbContextOptions<BloggerContext> options, UserResolverService userService) : base(options)
         {
+            _userService = userService;
         }
         public DbSet<Post> Posts { get; set; }
 
-        public async  Task<int> SaveChangesAsync()
+        public async Task<int> SaveChangesAsync()
         {
             var entries = ChangeTracker.
                 Entries().
@@ -25,10 +29,12 @@ namespace Infrastructure.Data
             foreach (var entityEntry in entries)
             {
                 ((AuditableEntity)entityEntry.Entity).LastModified = DateTime.UtcNow;
+                ((AuditableEntity)entityEntry.Entity).LastModifiedBy = _userService.GetUser();
 
-                if(entityEntry.State == EntityState.Added)
+                if (entityEntry.State == EntityState.Added)
                 {
                     ((AuditableEntity)entityEntry.Entity).CreatedAt = DateTime.UtcNow;
+                    ((AuditableEntity)entityEntry.Entity).CreatedBy = _userService.GetUser();
                 }
             }
             return await base.SaveChangesAsync();
