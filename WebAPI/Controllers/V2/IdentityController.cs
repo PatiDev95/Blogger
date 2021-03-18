@@ -115,6 +115,49 @@ namespace WebAPI.Controllers.V2
         }
 
         [HttpPost]
+        [Route("RegisterSuperUser")]
+        public async Task<IActionResult> RegisterSuperUser(RegisterModel register)
+        {
+            var userExist = await _userManager.FindByNameAsync(register.UserName);
+            if (userExist != null)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                {
+                    Succeeded = false,
+                    Message = "User already exist!"
+                });
+            }
+
+            ApplicationUser user = new ApplicationUser()
+            {
+                Email = register.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = register.UserName
+            };
+
+            var result = await _userManager.CreateAsync(user, register.Password);
+
+            if (!result.Succeeded)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response<bool>
+                {
+                    Succeeded = false,
+                    Message = "User creation faild! Please check user details and try again.",
+                    Errors = result.Errors.Select(x => x.Description)
+                });
+            }
+
+            if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
+            if (!await _roleManager.RoleExistsAsync(UserRoles.User))
+                await _roleManager.CreateAsync(new IdentityRole(UserRoles.User));
+
+            await _userManager.AddToRolesAsync(user, new List<string> { UserRoles.Admin, UserRoles.User });
+
+            return Ok(new Response<bool> { Succeeded = true, Message = "User created succesfully!" });
+        }
+
+        [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login (LoginModel login)
         {

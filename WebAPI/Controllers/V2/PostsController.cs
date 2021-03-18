@@ -15,10 +15,11 @@ using WebAPI.Wrappers;
 
 namespace WebAPI.Controllers.V2
 {
-    [Authorize]
+    
     [ApiExplorerSettings(IgnoreApi = false)]
     [ApiVersion("2.0")]
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class PostsController : ControllerBase
     {
@@ -29,6 +30,7 @@ namespace WebAPI.Controllers.V2
             _postService = postService;
         }
 
+        [Authorize(Roles = UserRoles.User)]
         [SwaggerOperation(Summary = "Retrives sort fields.")]
         [HttpGet("[action]")]
         public IActionResult GetSortFields()
@@ -36,16 +38,16 @@ namespace WebAPI.Controllers.V2
             return Ok(SortingHelper.GetSortFields().Select(x => x.Key));
         }
 
+        [AllowAnonymous]
         [SwaggerOperation(Summary = "Returns all posts.")]
         [EnableQuery]
-        [Authorize(Roles = UserRoles.Admin)]
         [HttpGet("[action]")]
         public IQueryable<PostDto> GetAll()
         {
             return _postService.GetAllPosts();
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = UserRoles.User)]
         [SwaggerOperation(Summary = "Returns paged posts.")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] PaginationFilter paginationFilter, [FromQuery] SortingFilter sortingFilter, [FromQuery] string filterBy = "")
@@ -59,7 +61,7 @@ namespace WebAPI.Controllers.V2
             return Ok(PaginationHelper.CreatePagedResponse(posts, validPaginationFilter, totalRecords));
         }
 
-        [AllowAnonymous]
+        [Authorize(Roles = UserRoles.User)]
         [SwaggerOperation(Summary = "Return a post with the specified id.")]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -72,6 +74,7 @@ namespace WebAPI.Controllers.V2
             return NotFound();
         }
 
+        [AllowAnonymous]
         [SwaggerOperation(Summary = "Search post by title.")]
         [HttpGet]
         [Route("Search/{title}")]
@@ -94,7 +97,7 @@ namespace WebAPI.Controllers.V2
             return Created($"api/posts/{post.Id}", post);
         }
 
-        [Authorize(Roles = UserRoles.User)]
+        [Authorize(Roles = UserRoles.Admin)]
         [SwaggerOperation(Summary = "Update existing post.")]
         [HttpPut]
         public async Task<IActionResult> Put(UpdatePostDto updatePost)
@@ -111,7 +114,7 @@ namespace WebAPI.Controllers.V2
             return NoContent();
         }
 
-        [Authorize(Roles = UserRoles.AdminorUser)]
+        [Authorize(Roles = UserRoles.Admin)]
         [SwaggerOperation(Summary = "Delete existing post.")]
         [HttpDelete]
         public async  Task<IActionResult> Delete(int id)
